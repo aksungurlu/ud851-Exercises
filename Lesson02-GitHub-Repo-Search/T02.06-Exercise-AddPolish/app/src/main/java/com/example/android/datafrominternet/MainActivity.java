@@ -15,6 +15,7 @@
  */
 package com.example.android.datafrominternet;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,8 +25,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.datafrominternet.utilities.NetworkUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -120,6 +125,20 @@ public class MainActivity extends AppCompatActivity {
             if (githubSearchResults != null && !githubSearchResults.equals("")) {
                 // TODO (17) Call showJsonDataView if we have valid, non-null results
                 showJsonDataView();
+                JSONObject jSearchResult = null;
+                try {
+                    jSearchResult = new JSONObject(githubSearchResults);
+                }catch (JSONException je){
+                    je.printStackTrace();
+                }
+                String totalcount = null;
+                try {
+                    totalcount = (String) jSearchResult.getString("total_count");
+                }catch (JSONException je){
+                    je.printStackTrace();
+                }
+                Context context = MainActivity.this;
+                Toast.makeText(context, totalcount + " results are found!", Toast.LENGTH_LONG).show();
                 mSearchResultsTextView.setText(githubSearchResults);
             }
             else{
